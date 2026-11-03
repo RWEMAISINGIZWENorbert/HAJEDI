@@ -8,7 +8,7 @@ import 'package:hajedi/utils/auth_utils.dart';
 import 'package:http/http.dart' as http;
 
 class UserRepository {
-  final String _baseUrl = dotenv.env['API_URL']!;
+  final String _baseUrl = dotenv.env['API_URL'] ?? dotenv.env['API_URL_DEV']!;
    
   Future<List<User>> getAllUsers() async {
     final url = Uri.parse('$_baseUrl/auth/users');

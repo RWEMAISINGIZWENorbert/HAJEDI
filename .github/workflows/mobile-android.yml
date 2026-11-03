@@ -1,0 +1,72 @@
+name: Mobile Android build
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    env:
+      MOBILE_API_URL_MAIN: ${{ vars.API_URL }}
+      MOBILE_API_URL_DEV: ${{ vars.API_URL_DEV }}
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+          cache-dependency-path: mobile/pubspec.lock
+
+      - name: Configure API URL for branch
+        shell: bash
+        run: |
+          case "$GITHUB_REF_NAME" in
+            dev) api_url="$MOBILE_API_URL_DEV" ;;
+            main) api_url="$MOBILE_API_URL_MAIN" ;;
+            *)
+              echo "This workflow only supports the dev and main branches." >&2
+              exit 1
+              ;;
+          esac
+
+          if [[ -z "$api_url" ]]; then
+            echo "Set the matching API_URL GitHub Actions variable before building." >&2
+            exit 1
+          fi
+
+          if [[ ! "$api_url" =~ ^https?:// ]]; then
+            echo "The configured API URL must start with http:// or https://." >&2
+            exit 1
+          fi
+
+          printf 'API_URL=%s\n' "$api_url" > mobile/.env
+
+      - name: Install Flutter dependencies
+        working-directory: mobile
+        run: flutter pub get
+
+      - name: Build release APK
+        working-directory: mobile
+        run: flutter build apk --release
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: hajedi-${{ github.ref_name }}-apk
+          path: mobile/build/app/outputs/flutter-apk/app-release.apk
+          if-no-files-found: error
