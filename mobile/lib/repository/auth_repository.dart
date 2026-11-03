@@ -42,7 +42,8 @@ class AuthRepository {
       return authData;
     }
 
-    throw Exception(data['message'] ?? 'Login failed');
+    // throw Exception(data['message'] ?? 'Login failed');
+    throw Exception(data['error'] ?? 'Login failed');
      }catch (e) {
       throw Exception('Login failed');
      }
