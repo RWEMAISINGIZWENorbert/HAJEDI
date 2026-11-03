@@ -1,11 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hajedi/bloc/auth/auth_bloc.dart';
+import 'package:hajedi/core/network/sync_coordinator.dart';
+import 'package:hajedi/core/network/sync_manager.dart';
+import 'package:hajedi/data/customer.dart';
+import 'package:hajedi/data/expense.dart';
+import 'package:hajedi/data/product.dart';
+import 'package:hajedi/data/purchase.dart';
+import 'package:hajedi/data/sale.dart';
+import 'package:hajedi/data/supplier.dart';
+import 'package:hajedi/data/sync_queue_item.dart';
+import 'package:hajedi/data/user.dart';
 import 'package:hajedi/l10n/app_localizations.dart';
 import 'package:hajedi/widgets/animated_snackbar.dart';
 import 'package:hajedi/widgets/input_text_field.dart';
 import 'package:hajedi/widgets/primary_button.dart';
 import 'package:hajedi/widgets/text.dart';
+import 'package:hive/hive.dart';
 
 class SignIn extends StatefulWidget {
 	const SignIn({super.key});
@@ -17,6 +28,19 @@ class SignIn extends StatefulWidget {
 class _SignInState extends State<SignIn> {
 	final _nameController = TextEditingController();
 	final _passwordController = TextEditingController();
+
+  final syncManager = SyncManager.create(
+     queueBox: Hive.box<SyncQueueItem>('syncQueue'),
+     userBox: Hive.box<User>('users'),
+     productBox: Hive.box<Product>('products'),
+     saleBox: Hive.box<Sale>('sales'),
+     purchaseBox: Hive.box<Purchase>('purchases'),
+     expenseBox: Hive.box<Expense>('expenses'),
+     customerBox: Hive.box<Customer>('customers'),
+     supplierBox: Hive.box<Supplier>('suppliers')
+  );
+  
+  SyncCoordinator get syncCoordinator => SyncCoordinator(syncManager);
 
 	@override
 	void dispose() {
@@ -61,6 +85,8 @@ class _SignInState extends State<SignIn> {
 							child: BlocConsumer<AuthBloc, AuthState>(
 								listener: (context, state) {
 									if (state is LoginSuccessfully) {
+                    syncManager.start();
+                    syncCoordinator.start();
 										showAnimatedSnackBar(context, state.message);
                     Navigator.pushReplacementNamed(
                       context,

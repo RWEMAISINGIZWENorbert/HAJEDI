@@ -207,8 +207,8 @@ Future<dynamic> showSellCartBottomSheet(
                             showDialog(
                               context: context,
                               builder: (ctx) => AlertDialog(
-                                title:  Text("payment_method_required"),
-                                content:  Text("choose_payment_method"),
+                                title:  Text("payment method required"),
+                                content:  Text("choose payment method"),
                                 actions: [
                                   TextButton(
                                     onPressed: () => Navigator.of(ctx).pop(),
@@ -219,8 +219,9 @@ Future<dynamic> showSellCartBottomSheet(
                             );
                             return;
                           }
-                          if (selectedPayment == 'credit' &&
-                              selectedCustomer == null) {
+                          // if (selectedPayment == 'credit' &&
+                          //     selectedCustomer == null) {
+                          if (selectedPayment == 'credit') {
                             showDialog(
                               context: context,
                               builder: (ctx) => AlertDialog(
@@ -240,7 +241,7 @@ Future<dynamic> showSellCartBottomSheet(
                               context.read<SaleBloc>().add(
                                 CreateSaleLocal(
                                   cartItems: state.items,
-                                  customerClientId: selectedCustomer!.clientId, // Add customer ID if you have customer selection
+                                  customerClientId: selectedCustomer?.clientId, // Add customer ID if you have customer selection
                                   paymentMethod: selectedPayment!, // or your preferred payment method
                                ),
                               );
