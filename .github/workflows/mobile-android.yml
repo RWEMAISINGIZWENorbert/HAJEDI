@@ -30,7 +30,6 @@ jobs:
         with:
           channel: stable
           cache: true
-          cache-dependency-path: mobile/pubspec.lock
 
       - name: Configure API URL for branch
         shell: bash
