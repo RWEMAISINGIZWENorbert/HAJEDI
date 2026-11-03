@@ -6,7 +6,7 @@ import 'package:hajedi/utils/auth_utils.dart';
 import 'package:http/http.dart' as http;
 
 class AuthRepository {
-  final String _baseUrl = dotenv.env['API_URL']!;
+  final String _baseUrl = dotenv.env['API_URL'] ?? dotenv.env['API_URL_DEV']!;
 
   Future<AuthData> login({
     required String name,

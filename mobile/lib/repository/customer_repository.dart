@@ -6,7 +6,7 @@ import 'package:hajedi/utils/auth_utils.dart';
 import 'package:http/http.dart' as http;
 
 class CustomerRepository {
-  final String _baseUrl = dotenv.env['API_URL']!;
+  final String _baseUrl = dotenv.env['API_URL'] ?? dotenv.env['API_URL_DEV']!;
    
   Future<List<Customer>> getAllCustomers() async {
     final url = Uri.parse('$_baseUrl/customer');
