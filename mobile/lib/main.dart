@@ -60,6 +60,7 @@ void main() async {
    );
   await HiveRegistry.init();
   await HiveRegistry.clearALlBoxes();
+  await AuthUtils.clearAuthData();
   await dotenv.load(fileName: ".env");
   final syncManager = SyncManager.create(
      queueBox: Hive.box<SyncQueueItem>('syncQueue'),

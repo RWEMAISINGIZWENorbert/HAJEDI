@@ -46,8 +46,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     Emitter<AuthState> emit,
   ) async {
     try {
-      await AuthUtils.clearAuthData();
-
+      
+await AuthUtils.clearAuthData();
       emit(
         LogoutSuccessfully(
           message: 'Logout successful',

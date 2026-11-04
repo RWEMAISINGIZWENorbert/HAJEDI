@@ -66,6 +66,7 @@ class _UsersState extends State<Users> {
                       actions: '',
                       isHeader: false,
                       context: context,
+                      isCreator: user.isCreator,
                       onRemove: () {
                         // context.read<UserBloc>().add(DeleteUserLocal(userId: user.id));
                         showConfirmationDialog(
@@ -113,6 +114,7 @@ class _UsersState extends State<Users> {
     required String role,
     required String password,
     required String actions,
+    bool isCreator = false,
     bool isHeader = false,
     VoidCallback? onRemove,
     VoidCallback? onEdit,
@@ -146,6 +148,7 @@ class _UsersState extends State<Users> {
               child: Text(actions, style: style),
             )
           else
+           if(role != 'admin' && isCreator == false) 
             Expanded(
               flex: 0,
               child: Row(
