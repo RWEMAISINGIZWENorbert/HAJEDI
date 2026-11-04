@@ -36,6 +36,8 @@ export const register = async (req, res) => {
     });
    }
 
+   const anyUser = await User.findOne({});
+
     const existingUser = await User.findOne({
       $or: [
         { clientId },
@@ -56,19 +58,15 @@ export const register = async (req, res) => {
       clientId,
       name,
       role: role || "employee",
+      isCreator: anyUser 
+                 ? false 
+                 : role  == 'admin' ? true : false,
       password: hashedPassword,
     });
 
     return res.status(201).json({
       message: "User registered successfully",
-      user: {
-        id: newUser._id,
-        clientId: newUser.clientId,
-        name: newUser.name,
-        role: newUser.role,
-        createdAt: newUser.createdAt,
-        updatedAt: newUser.updatedAt,
-      },
+      user: newUser,
     });
   } catch (error) {
     return res.status(500).json({

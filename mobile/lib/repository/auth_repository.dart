@@ -42,10 +42,11 @@ class AuthRepository {
       return authData;
     }
 
-    // throw Exception(data['message'] ?? 'Login failed');
-    throw Exception(data['error'] ?? data['message']);
+    throw Exception(data['message'] ?? 'Login failed');
+    // throw Exception(data['error'] ?? data['message']);
      }catch (e) {
-      throw Exception(e.toString());
+      // throw Exception(e.toString());
+      throw Exception('Login failed');
      }
   }
 

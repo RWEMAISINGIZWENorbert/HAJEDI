@@ -28,6 +28,9 @@ class User extends HiveObject {
   @HiveField(7)
   DateTime updatedAt;
 
+  @HiveField(8)
+  bool isCreator;
+
   User({
     required this.id,
     required this.clientId,
@@ -35,6 +38,7 @@ class User extends HiveObject {
     required this.role,
     required this.password,
     this.isSynced = false,
+    this.isCreator = false,
     DateTime? createdAt,
     DateTime? updatedAt,
   })  : createdAt = createdAt ?? DateTime.now(),
@@ -59,6 +63,7 @@ class User extends HiveObject {
         ? DateTime.tryParse(json['updatedAt'].toString()) ??
             DateTime.now()
         : DateTime.now(),
+    isCreator: json['isCreator'] as bool? ?? false,    
   );
 }
 

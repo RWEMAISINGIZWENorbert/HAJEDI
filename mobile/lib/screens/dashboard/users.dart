@@ -55,10 +55,12 @@ class _UsersState extends State<Users> {
                     password: loc.password,
                     actions: loc.actions,
                     isHeader: true,
+                    isCreator: false,
                     context: context,
                   ),
                   const Divider(),
                   ...users.map((user) {
+                    print('=================== Name: ${user.name}, isCreator: ${user.isCreator}');
                     return _buildRow(
                       name: user.name,
                       role: user.role,
@@ -66,6 +68,7 @@ class _UsersState extends State<Users> {
                       actions: '',
                       isHeader: false,
                       context: context,
+                      isCreator: user.isCreator,
                       onRemove: () {
                         // context.read<UserBloc>().add(DeleteUserLocal(userId: user.id));
                         showConfirmationDialog(
@@ -113,6 +116,7 @@ class _UsersState extends State<Users> {
     required String role,
     required String password,
     required String actions,
+    required bool isCreator,
     bool isHeader = false,
     VoidCallback? onRemove,
     VoidCallback? onEdit,
@@ -146,6 +150,7 @@ class _UsersState extends State<Users> {
               child: Text(actions, style: style),
             )
           else
+          if((role != 'admin') & !isCreator) 
             Expanded(
               flex: 0,
               child: Row(

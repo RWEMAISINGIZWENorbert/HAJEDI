@@ -17,6 +17,10 @@ const userSchema = new mongoose.Schema(
       enum: ["employee", "admin"],
       default: "employee",
     },
+    isCreator: {
+      type: Boolean,
+      default: false,
+    },
     password: {
       type: String,
       required: true,
